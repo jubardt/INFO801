@@ -1,0 +1,11 @@
+{
+  "name": "maitreoeuvre_client",
+  "version": "1.0.0",
+  "description": "serveur client et espace de tuple propre au client et maitre d'oeuvre",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
