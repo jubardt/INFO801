@@ -34,9 +34,13 @@ app.get("/proposition", (req,res) => {
  })
 
  app.get("/contreprop", (req,res) => {
-    var contreProp = new ContreProposition();
-    res.json(contreProp);
-    console.log(contreProp);
+    var table = [];
+    table.push(new ContreProposition());
+    table.push(new ContreProposition());
+    table.push(new ContreProposition());
+    table.push(new ContreProposition());
+    res.json(table);
+    console.log(table);
   })
 
 
