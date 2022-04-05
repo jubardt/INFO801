@@ -1,10 +1,11 @@
 const express = require("express");
+const ContreProposition = require("./model/ContreProposition.js");
 const Proposition = require("./model/Proposition.js");
 const app = express();
 const port = 3000;
 let proposition = new Proposition();
 
-app.get("/demandes", (req,res) => {
+app.get("/", (req,res) => {
    const liste = [
      {
        id: 1,
@@ -26,11 +27,17 @@ app.get("/demandes", (req,res) => {
   res.json(liste);
 })
 
-app.get("/model", (req,res) => {
+app.get("/proposition", (req,res) => {
    res.json(proposition);
     proposition = new Proposition();
     console.log(proposition);
  })
+
+ app.get("/contreprop", (req,res) => {
+    var contreProp = new ContreProposition();
+    res.json(contreProp);
+    console.log(contreProp);
+  })
 
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
