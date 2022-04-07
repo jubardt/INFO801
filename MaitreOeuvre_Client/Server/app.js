@@ -2,11 +2,12 @@ const express = require("express");
 const ContreProposition = require("./model/ContreProposition.js");
 const ListeContreProp = require("./model/ListeContreProp.js");
 const Proposition = require("./model/Proposition.js");
+var cors = require('cors')
 const app = express();
 const port = 3000;
 let proposition = new Proposition();
 let contrePropositions = new ListeContreProp();
-
+app.use(cors());
 app.get("/", (req,res) => {
    const liste = [
      {

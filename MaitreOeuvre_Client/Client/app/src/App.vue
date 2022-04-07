@@ -6,11 +6,19 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+const request = require('request');
+
 
 export default {
   name: 'App',
   components: {
     HelloWorld
+  }
+  ,mounted(){
+        request('http://localhost:3000/contreprop', { json: true }, (err, res) => {
+            if (err) { return console.log(err); }
+            console.log(res.body);
+          });
   }
 }
 </script>
