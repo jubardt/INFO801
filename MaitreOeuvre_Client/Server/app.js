@@ -1,9 +1,11 @@
 const express = require("express");
 const ContreProposition = require("./model/ContreProposition.js");
+const ListeContreProp = require("./model/ListeContreProp.js");
 const Proposition = require("./model/Proposition.js");
 const app = express();
 const port = 3000;
 let proposition = new Proposition();
+let contrePropositions = new ListeContreProp();
 
 app.get("/", (req,res) => {
    const liste = [
@@ -34,13 +36,15 @@ app.get("/proposition", (req,res) => {
  })
 
  app.get("/contreprop", (req,res) => {
-    var table = [];
-    table.push(new ContreProposition());
-    table.push(new ContreProposition());
-    table.push(new ContreProposition());
-    table.push(new ContreProposition());
-    res.json(table);
-    console.log(table);
+   contrePropositions.vider();
+    contrePropositions.ajouter(new ContreProposition());
+    contrePropositions.ajouter(new ContreProposition());
+    contrePropositions.ajouter(new ContreProposition());
+    var contreProp = new ContreProposition(new ContreProposition(),"Coca Cola");
+    contrePropositions.ajouter(contreProp);
+    res.json(contrePropositions);
+    //contrePropositions.supprimer(contreProp);
+    console.log(contrePropositions);
   })
 
 

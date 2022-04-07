@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "bulma": "^0.9.3"
-  },
-  "devDependencies": {
-    "node-sass": "^7.0.1",
-    "sass-loader": "^12.6.0"
-  }
-}
