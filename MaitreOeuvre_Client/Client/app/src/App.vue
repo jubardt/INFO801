@@ -1,17 +1,5 @@
 <template>
   <router-view/>
-  <h1 class="title">
-    Gestion des demandes des fabriquants
-  </h1>
-  <div class="wrapper" @click="goTo('/liste')">
-    <button class="button is-primary">
-      Nouvelle demande aux fabriquants
-    </button>
-    <button class="button is-primary" @click="goTo('/requete')">
-      Liste des reponses des fabriquants
-    </button>
-    <button @click="connection.send('Tu entends ?')" class="button is-danger" >Increment</button>
-  </div>
 
 </template>
 
