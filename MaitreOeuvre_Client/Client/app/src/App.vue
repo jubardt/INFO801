@@ -1,18 +1,30 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
-  <button class="button is-danger">Increment</button>
+  <h1 class="title">
+    Gestion des demandes des fabriquants
+  </h1>
+  <div class="wrapper" @click="goTo('/liste')">
+    <button class="button is-primary">
+      Nouvelle demande aux fabriquants
+    </button>
+    <button class="button is-primary" @click="goTo('/requete')">
+      Liste des reponses des fabriquants
+    </button>
+  </div>
+
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
   components: {
-    HelloWorld
+  },
+  methods: {
+    goTo(path) {
+      this.$router.push(path);
+    }
   }
 }
+
 </script>
 
 <style>
@@ -23,5 +35,15 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.button{
+  margin-top: 20px;
+  width: 50%;
 }
 </style>
