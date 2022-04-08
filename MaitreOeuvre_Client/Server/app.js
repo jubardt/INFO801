@@ -7,7 +7,7 @@ const app = express();
 const portAPI = 3000;
 
 const WebSocketServer = require('ws');
-const portSocket = process.env.PORT || 8000;
+const portSocket = 9000;
 const wss = new WebSocketServer.Server({ port: portSocket })
 
 
@@ -87,6 +87,7 @@ wss.on("connection", ws => {
   console.log("nouvelle connection");
   ws.on("message", (data,isBinary) =>{
     console.log("message reçu: "+data);
+    ws.send("Oui je t'entends !!!!!");
   });
 });
 console.log("The WebSocket server is running on port "+portSocket);

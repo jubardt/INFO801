@@ -1,24 +1,42 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
-  <button class="button is-danger">Increment</button>
+  <button @click="connection.send('Tu entends ?')" class="button is-danger" >Increment</button>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 const request = require('request');
 
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      connection: null
+    }
   }
   ,mounted(){
+
+        //Exemple requête api
         request('http://localhost:3000/contreprop', { json: true }, (err, res) => {
             if (err) { return console.log(err); }
             console.log(res.body);
           });
+
+        //Exemple requête websocket
+                //TEST WEBSOCKET
+
+        //Etablissement de la connexion
+        this.connection = new WebSocket("ws://localhost:9000");
+
+        //Listener réception de message
+        this.connection.onmessage = function(event){
+            console.log("j'ai reçu un message !");
+            console.log(event.data);
+        }
+
+        //Listener connexion réussi
+        this.connection.onopen = function(){
+            console.log("Connecté au socket réussi !");
+        }
   }
 }
 </script>
