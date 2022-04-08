@@ -1,4 +1,5 @@
 <template>
+  <router-view/>
   <h1 class="title">
     Gestion des demandes des fabriquants
   </h1>
