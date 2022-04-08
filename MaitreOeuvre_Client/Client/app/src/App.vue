@@ -9,11 +9,14 @@
     <button class="button is-primary" @click="goTo('/requete')">
       Liste des reponses des fabriquants
     </button>
+    <button @click="connection.send('Tu entends ?')" class="button is-danger" >Increment</button>
   </div>
 
 </template>
 
 <script>
+const request = require('request');
+
 export default {
   name: 'App',
   components: {
@@ -22,10 +25,40 @@ export default {
     goTo(path) {
       this.$router.push(path);
     }
+    },
+    data() {
+    return {
+      connection: null
+    }
   }
-}
+  ,mounted(){
 
-</script>
+        //Exemple requête api
+        request('http://localhost:3000/contreprop', { json: true }, (err, res) => {
+            if (err) { return console.log(err); }
+            console.log(res.body);
+          });
+
+        //Exemple requête websocket
+                //TEST WEBSOCKET
+
+        //Etablissement de la connexion
+        this.connection = new WebSocket("ws://localhost:9000");
+
+        //Listener réception de message
+        this.connection.onmessage = function(event){
+            console.log("j'ai reçu un message !");
+            console.log(event.data);
+        }
+
+        //Listener connexion réussi
+        this.connection.onopen = function(){
+            console.log("Connecté au socket réussi !");
+        }
+        }
+        }
+        </script>
+
 
 <style>
 #app {

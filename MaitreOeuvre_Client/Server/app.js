@@ -2,11 +2,41 @@ const express = require("express");
 const ContreProposition = require("./model/ContreProposition.js");
 const ListeContreProp = require("./model/ListeContreProp.js");
 const Proposition = require("./model/Proposition.js");
+var cors = require('cors')
 const app = express();
-const port = 3000;
+const portAPI = 3000;
+
+const WebSocketServer = require('ws');
+const portSocket = 9000;
+const wss = new WebSocketServer.Server({ port: portSocket })
+
+
+
+//Variables globales
 let proposition = new Proposition();
 let contrePropositions = new ListeContreProp();
 
+
+//GESTION DE LA BDD
+/*var mysql = require('mysql');
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "user",
+  password: "pswd"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+});*/
+
+
+
+
+
+
+///GESTION DE L'API
+app.use(cors());
 app.get("/", (req,res) => {
    const liste = [
      {
@@ -48,4 +78,16 @@ app.get("/proposition", (req,res) => {
   })
 
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(portAPI, () => console.log(`Example app listening on port ${portAPI}!`));
+
+
+
+///GESTION DU WEBSOCKET
+wss.on("connection", ws => {
+  console.log("nouvelle connection");
+  ws.on("message", (data,isBinary) =>{
+    console.log("message reçu: "+data);
+    ws.send("Oui je t'entends !!!!!");
+  });
+});
+console.log("The WebSocket server is running on port "+portSocket);
