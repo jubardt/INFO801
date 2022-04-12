@@ -8,7 +8,7 @@ class ContreProposition{
     quantite =0;
     caracteristiques = [];
 
-    constructor(proposition = new Proposition(),fabriquant="Thomas and zoz",cout=0,delai=0,quantite=0,caracteristiques=0){
+    constructor(proposition = new Proposition(),fabriquant="Thomas and zoz",cout=0,delai=0,quantite=0,caracteristiques=["flexible","léger","plastique"]){
         this.proposition = proposition;
         this.fabriquant = fabriquant;
         this.cout = cout;

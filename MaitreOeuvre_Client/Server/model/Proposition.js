@@ -8,16 +8,13 @@ class Proposition {
 
 
 
-    constructor(sujet="vide",cout=0,delai=0,caracteristiques=[],quantite=0) {
+    constructor(sujet="Raquette de ping pong",cout=0,delai="5 mois",caracteristiques=["Robuste","Métallique","flexible"],quantite=0) {
         this.id = Proposition.ID_INC++;
         this.sujet = sujet;
         this.cout = cout;
         this.delai = delai;
         this.caracteristiques = caracteristiques;
         this.quantite = quantite;
-        this.caracteristiques.push("résistant");
-        this.caracteristiques.push("métaux");
-        this.caracteristiques.push("flexible");
     }
 };
 

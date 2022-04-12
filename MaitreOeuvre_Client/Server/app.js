@@ -1,6 +1,6 @@
 const express = require("express");
 const ContreProposition = require("./model/ContreProposition.js");
-const ListeContreProp = require("./model/ListeContreProp.js");
+const ListeProp = require("./model/ListeProp.js");
 const Proposition = require("./model/Proposition.js");
 var cors = require('cors')
 const app = express();
@@ -14,7 +14,8 @@ const wss = new WebSocketServer.Server({ port: portSocket })
 
 //Variables globales
 let proposition = new Proposition();
-let contrePropositions = new ListeContreProp();
+let contrePropositions = new ListeProp();
+let propositions = new ListeProp();
 
 
 //GESTION DE LA BDD
@@ -37,32 +38,17 @@ con.connect(function(err) {
 
 ///GESTION DE L'API
 app.use(cors());
-app.get("/", (req,res) => {
-   const liste = [
-     {
-       id: 1,
-       name: "Robert",
-       description: "Bonjour je m'appelle robert et je veux créer des raquetes de bad"
-     },
-     {
-       id: 2,
-       name: "Thomas",
-       description: "Je créer ma marque de ballon de volley que j'appelerais BASTOS 3000"
-     },
-     {
-       id: 3,
-       name: "Zohir",
-       description: "Pour les personnes se faisant mal aux skis, je veux créer des protections de skis pour les chevilles et ainsi les protéger de tout danger, même les potaux"
-     },
-   ];
+app.use(express.json());
 
-  res.json(liste);
+app.get("/addProposition", (req,res) => {
+  console.log(req.body);
 })
 
 app.get("/proposition", (req,res) => {
    res.json(proposition);
     proposition = new Proposition();
     console.log(proposition);
+    res.json(contrePropositions);
  })
 
  app.get("/contreprop", (req,res) => {
@@ -70,8 +56,6 @@ app.get("/proposition", (req,res) => {
     contrePropositions.ajouter(new ContreProposition());
     contrePropositions.ajouter(new ContreProposition());
     contrePropositions.ajouter(new ContreProposition());
-    var contreProp = new ContreProposition(new ContreProposition(),"Coca Cola");
-    contrePropositions.ajouter(contreProp);
     res.json(contrePropositions);
     //contrePropositions.supprimer(contreProp);
     console.log(contrePropositions);
@@ -84,7 +68,6 @@ app.listen(portAPI, () => console.log(`Example app listening on port ${portAPI}!
 
 ///GESTION DU WEBSOCKET
 wss.on("connection", ws => {
-  console.log("nouvelle connection");
   ws.on("message", (data,isBinary) =>{
     console.log("message reçu: "+data);
     ws.send("Oui je t'entends !!!!!");
