@@ -55,6 +55,10 @@ app.get("/proposition", (req,res) => {
     res.json(contrePropositions);
  })
 
+ app.get("/propositions", (req,res) => {
+   res.json(propositions);
+})
+
  app.get("/contreprop", (req,res) => {
    contrePropositions.vider();
     contrePropositions.ajouter(new ContreProposition());
