@@ -24,7 +24,6 @@
 </template>
 
 <script>
-let listeRequete;
 const request = require('request');
 
 export default {
@@ -38,19 +37,9 @@ export default {
   mounted() {
     request('http://localhost:3000/contreprop', { json: true }, (err, res) => {
       if (err) { return console.log(err); }
-      console.log(res.body);
       this.listeRequete = res.body.liste;
       this.isLoaded = true;
-      console.log(listeRequete.length);
     });
-  },
-  methods:{
-    test(){
-      listeRequete.forEach(element => {
-        console.log(element.fabriquant);
-      });
-    }
-
   }
 }
 </script>
@@ -69,8 +58,8 @@ export default {
   flex-direction: column;
   align-items: center;
   background-color: #95794B;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
 }
 
 
