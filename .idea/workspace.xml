@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="497f1883-acc8-4fe8-a940-d7fe1081dc37" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/MaitreOeuvre_Client/Client/app/src/components/listes.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MaitreOeuvre_Client/Client/app/src/components/requete.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaitreOeuvre_Client/Client/app/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/MaitreOeuvre_Client/Client/app/src/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaitreOeuvre_Client/Client/app/src/components/HelloWorld.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaitreOeuvre_Client/Client/app/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/MaitreOeuvre_Client/Client/app/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MaitreOeuvre_Client/Client/app/src/components/listes.vue" beforeDir="false" afterPath="$PROJECT_DIR$/MaitreOeuvre_Client/Client/app/src/components/listes.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +26,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -48,7 +45,10 @@
       <updated>1649147606658</updated>
       <workItem from="1649147610416" duration="15000" />
       <workItem from="1649147706394" duration="3488000" />
-      <workItem from="1649399490283" duration="1652000" />
+      <workItem from="1649399490283" duration="8059000" />
+      <workItem from="1649664228621" duration="2884000" />
+      <workItem from="1649748983512" duration="8000" />
+      <workItem from="1649762772877" duration="2033000" />
     </task>
     <servers />
   </component>
