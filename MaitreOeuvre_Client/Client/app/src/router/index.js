@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import listes from '@/components/listes.vue'
 import requete from '@/components/requete.vue'
 import Home from '@/components/Home.vue'
+import newOffre from '@/components/newOffre.vue'
 
 
 const routes = [
@@ -19,6 +20,11 @@ const routes = [
         name: 'home',
         path: '/',
         component: Home,
+    },
+    {
+        name: 'offre',
+        path: '/offre',
+        component: newOffre,
     }
 
     //Ajouter la route

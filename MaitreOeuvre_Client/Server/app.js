@@ -42,6 +42,7 @@ app.use(cors());
 app.use(express.json());
 
 app.post("/addProposition", (req,res) => {
+  //console.log(req);
   propositions.ajouter(new Proposition(req.body.demande,req.body.cout,req.body.delai,req.body.caracteristiques,req.body.quantite));
   console.log(propositions);
   res.send("super nickel");
