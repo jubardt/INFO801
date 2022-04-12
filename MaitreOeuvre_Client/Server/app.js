@@ -7,6 +7,7 @@ const app = express();
 const portAPI = 3000;
 
 const WebSocketServer = require('ws');
+const { CP1250_BIN } = require("mysql/lib/protocol/constants/charsets");
 const portSocket = 9000;
 const wss = new WebSocketServer.Server({ port: portSocket })
 
@@ -40,8 +41,10 @@ con.connect(function(err) {
 app.use(cors());
 app.use(express.json());
 
-app.get("/addProposition", (req,res) => {
-  console.log(req.body);
+app.post("/addProposition", (req,res) => {
+  propositions.ajouter(new Proposition(req.body.demande,req.body.cout,req.body.delai,req.body.caracteristiques,req.body.quantite));
+  console.log(propositions);
+  res.send("super nickel");
 })
 
 app.get("/proposition", (req,res) => {
