@@ -101,10 +101,10 @@ let propositions = new ListeProp();
 ///POST////////////////////////
 
 app.post("/addProposition", (req,res) => {
-  //console.log(req);
-  propositions.ajouter(new Proposition(req.body.demande,req.body.cout,req.body.delai,req.body.caracteristiques,req.body.quantite));
-  console.log(propositions);
-  res.send("super nickel");
+  (async() => {
+    var propAdd = await addProposition(req.body.demande,req.body.description,req.body.cout,req.body.delai,req.body.caracteristiques,req.body.quantite);
+    res.status(200).send("ajout réussi !");
+  })();
 })
 
 
@@ -160,5 +160,18 @@ console.log("The WebSocket server is running on port "+portSocket);
 async function getPropositions() {
   const propositionsBDD =  await PropositionBDD.find();
   return propositionsBDD;
+}
+
+//Ajout d'une proposition
+async function addProposition(demande,description,cout,delai,caracteristiques,quantite) {
+  const propositionBDD = new PropositionBDD({sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:false,quantite:quantite});
+  await propositionBDD.save();
+  return propositionBDD;
+}
+
+//Renvoi la liste des contre propositions d'une proposition
+async function getContrePropositions(proposition) {
+  const contrePropositionBDD = await ContrePropositionBDD.find({proposition:proposition});
+  return contrePropositionBDD;
 }
 
