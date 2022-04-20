@@ -1,0 +1,47 @@
+<template>
+  <div class="all">
+    <h1 class="title">Listes des propositions clients</h1>
+
+        <div v-if="isLoaded">
+            <div v-for="element in listeRequete" :key="element.id">
+                <PropositionCard v-bind:proposition="element" :key="element.id" />
+            </div>
+        </div>
+        <div v-else>
+            <p>Chargement des données...</p>
+        </div>
+    
+
+    </div>
+</template>
+
+<script>
+const request = require('request');
+import PropositionCard from './cards/PropositionCard.vue'
+
+export default {
+  name: "listes",
+  components: {
+    PropositionCard
+  },
+  data() {
+    return {
+      listeRequete: [],
+      isLoaded: false,
+    }
+  },
+  mounted() {
+    request('http://localhost:3000/propositions', { json: true }, (err, res) => {
+      if (err) { return console.log(err); }
+      console.log(res.body);
+      this.listeRequete = res.body.liste;
+      this.isLoaded = true;
+      console.log(this.listeRequete);
+    });
+  },
+}
+</script>
+
+<style scoped>
+
+</style>

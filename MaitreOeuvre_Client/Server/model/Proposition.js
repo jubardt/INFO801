@@ -2,7 +2,7 @@ class Proposition {
     static ID_INC = 1;
     sujet = "";
     cout = 0;
-    delai = 0;
+    delai = "5 jours";
     quantite =0;
     caracteristiques = [];
 

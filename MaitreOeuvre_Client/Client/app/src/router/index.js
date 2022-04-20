@@ -3,6 +3,7 @@ import listes from '@/components/listes.vue'
 import requete from '@/components/requete.vue'
 import Home from '@/components/Home.vue'
 import newOffre from '@/components/newOffre.vue'
+import ListPropositions from '@/components/ListPropositions.vue'
 
 
 const routes = [
@@ -25,6 +26,11 @@ const routes = [
         name: 'offre',
         path: '/offre',
         component: newOffre,
+    },
+    {
+        name: 'offreListe',
+        path: '/offre/all',
+        component: ListPropositions,
     }
 
     //Ajouter la route
