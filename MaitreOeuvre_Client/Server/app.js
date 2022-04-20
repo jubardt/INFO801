@@ -11,7 +11,8 @@ const WebSocketServer = require('ws');
 const portSocket = 9000;
 const wss = new WebSocketServer.Server({ port: portSocket })
 
-
+app.use(cors());
+app.use(express.json());
 
 ///MODEL POUR LA BDD////
 const PropositionSchema = new mongoose.Schema({
@@ -45,15 +46,17 @@ const ContrePropositionBDD = mongoose.model("ContreProposition", ContrePropositi
 main().catch(error => console.error(error));
 
 async function main() {
+
+  //INITIALISATION DES LISTES DE PROPOSITIONS ET DE CONTRE-PROPOSITIONS
   await mongoose.connect("mongodb://localhost:27017/app");
-  const test = new PropositionBDD({sujet:"test",description:"Une batterie de test pour voir si ça marche",cout:0,delai:"5 jours",quantite:0,estValide:false,caracteristiques:["Robuste","Métallique","flexible"]});
+  /*const test = new PropositionBDD({sujet:"test",description:"Une batterie de test pour voir si ça marche",cout:0,delai:"5 jours",quantite:0,estValide:false,caracteristiques:["Robuste","Métallique","flexible"]});
   await test.save();
   const testContre = new ContrePropositionBDD({proposition:test._id,reponse:"Une batterie de test pour voir si ça marche",cout:0,delai:"5 jours",quantite:0,estValide:false,estAccepte:false,caracteristiques:["Robuste","Métallique","flexible"]});
   testContre.save();
   const propositionsBDD = await PropositionBDD.find();
   const contrePropositionBDD = await ContrePropositionBDD.find();
   console.log(propositionsBDD);
-  console.log(contrePropositionBDD);
+  console.log(contrePropositionBDD);*/
 
 
   //////EXEMPLES MONGOOSE//////
@@ -87,19 +90,15 @@ async function main() {
 
 
 
-
-
-//
-
-
 //Variables globales
 let proposition = new Proposition();
 let contrePropositions = new ListeProp();
 let propositions = new ListeProp();
 
-///GESTION DE L'API
-app.use(cors());
-app.use(express.json());
+///GESTION DE L'API ET DES ENDPONTS/////////////////
+
+
+///POST////////////////////////
 
 app.post("/addProposition", (req,res) => {
   //console.log(req);
@@ -107,6 +106,13 @@ app.post("/addProposition", (req,res) => {
   console.log(propositions);
   res.send("super nickel");
 })
+
+
+
+
+
+
+/////GET////////////////////////
 
 app.get("/proposition", (req,res) => {
    res.json(proposition);
@@ -116,7 +122,12 @@ app.get("/proposition", (req,res) => {
  })
 
  app.get("/propositions", (req,res) => {
-   res.json(propositions);
+  (async() => {
+    const props = await getPropositions();
+    console.log(props);
+    res.status(200).send(props); 
+  })();
+
 })
 
  app.get("/contreprop", (req,res) => {
@@ -142,3 +153,12 @@ wss.on("connection", ws => {
   });
 });
 console.log("The WebSocket server is running on port "+portSocket);
+
+
+
+//Renvoi la liste des propositions
+async function getPropositions() {
+  const propositionsBDD =  await PropositionBDD.find();
+  return propositionsBDD;
+}
+

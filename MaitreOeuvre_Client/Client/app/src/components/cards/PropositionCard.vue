@@ -27,7 +27,7 @@
 export default {
     props: ['proposition'],
 }
-</script scoped>
+</script>
 
 <style scoped>
 
