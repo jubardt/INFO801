@@ -103,9 +103,19 @@ let propositions = new ListeProp();
 app.post("/addProposition", (req,res) => {
   (async() => {
     var propAdd = await addProposition(req.body.demande,req.body.description,req.body.cout,req.body.delai,req.body.caracteristiques,req.body.quantite);
+    console.log(propAdd);
     res.status(200).send("ajout réussi !");
   })();
 })
+
+app.post("/addContreProposition", (req,res) => {
+  (async() => {
+    var contrePropAdd = await addContreProposition(req.body.proposition_id,req.body.reponse,req.body.cout,req.body.delai,req.body.quantite,req.body.caracteristiques);
+    console.log(contrePropAdd);
+    res.status(200).send("ajout réussi !");
+  })();
+})
+
 
 
 
@@ -170,8 +180,14 @@ async function addProposition(demande,description,cout,delai,caracteristiques,qu
 }
 
 //Renvoi la liste des contre propositions d'une proposition
-async function getContrePropositions(proposition) {
-  const contrePropositionBDD = await ContrePropositionBDD.find({proposition:proposition});
+async function addContreProposition( proposition_id,reponse,cout,delai,quantite,caracteristiques) {
+  const contre = new ContrePropositionBDD({proposition:proposition_id,reponse:reponse,cout:cout,delai:delai,quantite:quantite,estValide:false,estAccepte:false,caracteristiques:caracteristiques});
+  await contre.save();
+  return contre;
+}
+
+async function getContrePropositions(id_proposition) {
+  const contrePropositionBDD = await ContrePropositionBDD.find({proposition:id_proposition});
   return contrePropositionBDD;
 }
 
