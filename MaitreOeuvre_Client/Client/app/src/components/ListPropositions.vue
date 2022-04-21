@@ -2,9 +2,15 @@
   <div class="all">
         <div v-if="isLoaded">
             <h1 class="title">Listes des propositions clients</h1>
-            <div v-for="element in listeRequete" :key="element.id">
-                <PropositionCard v-bind:proposition="element" :key="element.id" />
+            <div v-if="listeRequete.length!=0">
+              <div v-for="element in listeRequete" :key="element.id">
+                  <PropositionCard v-bind:proposition="element" :key="element.id" />
+              </div>
             </div>
+            <div v-else>
+              <p>Aucune proposition encore formulé...</p>
+            </div>
+
         </div>
         <div v-else>
             <p>Chargement des données...</p>

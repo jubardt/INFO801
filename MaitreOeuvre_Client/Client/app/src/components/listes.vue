@@ -1,27 +1,17 @@
 <template>
   <div class="all">
   <h1 class="title">Requête</h1>
-
-  <div v-for="element in listeRequete" :key="element.id">
-    <!--<div class="box container-req">-->
-      <!--<h2 class="title">{{element.fabriquant}}</h2>
-      <h3>Cout : {{element.cout}}</h3>
-      <h3>Délai : {{element.delai}}</h3>
-      <h3>Quantité : {{element.quantite}}</h3>-->
-      <!--<h2 class="subtitle">Contre-proposition</h2>
-      <h4>Reponse:{{element.reponse}}</h4>
-      <h4>Cout : {{element.cout}}</h4>
-      <h4>Délai : {{element.delai}}</h4>
-      <h4>Quantité : {{element.quantite}}</h4>
-      <h4>Sujet : {{element.sujet}}</h4>
-
-      <div v-for="el in element.caracteristiques" :key="el.id">
-        <h4>{{el}}</h4>
+  <div v-if="isLoaded">
+    <div v-if="listeRequete.length!=0">
+      <div v-for="element in listeRequete" :key="element.id">
+        <contrePropositionCard v-bind:proposition="element"></contrePropositionCard>
       </div>
-
-    </div>-->
-    <contrePropositionCard v-bind:proposition="element"></contrePropositionCard>
+    </div>
+    <div v-else>
+      <p>Aucune contre proposition pour cette offre...</p>
+    </div>
   </div>
+
   </div>
 </template>
 
