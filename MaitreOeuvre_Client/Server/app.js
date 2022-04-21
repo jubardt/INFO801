@@ -119,7 +119,7 @@ app.post("/addContreProposition", (req,res) => {
 //////UPDATE///////////////////
 app.post("/updateProposition", (req,res) => {
   (async() => {
-    var propAdd = await updateProposition(req.body.proposition_id,req.body.demande,req.body.description,req.body.cout,req.body.delai,req.body.caracteristiques,req.body.quantite);
+    var propAdd = await updateProposition(req.body.proposition_id,req.body.demande,req.body.description,req.body.cout,req.body.delai,req.body.caracteristiques,req.body.quantite,req.body.isValid);
     console.log(propAdd);
     res.status(200).send("ajout réussi !");
     const caca = await getPropositions();
@@ -240,4 +240,11 @@ async function getPropositions() {
   const propositionsBDD =  await PropositionBDD.find();
   return propositionsBDD;
 }
+
+async function isContrePropAccepted() {
+  const propositionsBDD =  await PropositionBDD.find();
+  return propositionsBDD;
+}
+
+
 

@@ -1,13 +1,11 @@
 <template>
+  <Header/>
   <h1 class="title">
     Gestion des demandes des fabriquants
   </h1>
   <div class="wrapper">
     <button class="button is-primary"  @click="goTo('/offre')">
       Nouvelle offre
-    </button>
-    <button class="button is-primary" @click="goTo('/liste')">
-      Liste des reponses des fabriquants
     </button>
     <button class="button is-primary" @click="goTo('/offre/all')">
       Liste de vos propositions
@@ -16,9 +14,14 @@
 </template>
 
 <script>
+import Header from './Header.vue'
 export default {
     name: 'Home',
-    methods:{
+    components: {
+        Header,
+      },
+   
+      methods:{
         goTo(path){
             this.$router.push(path);
         },
