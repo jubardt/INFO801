@@ -1,13 +1,11 @@
 const express = require("express");
-const ContreProposition = require("./model/ContreProposition.js");
-const ListeProp = require("./model/ListeProp.js");
-const Proposition = require("./model/Proposition.js");
 var cors = require('cors')
 const mongoose = require("mongoose");
 const app = express();
 const portAPI = 3000;
 
 const WebSocketServer = require('ws');
+const { ObjectId } = require("mongodb");
 const portSocket = 9000;
 const wss = new WebSocketServer.Server({ port: portSocket })
 
@@ -16,6 +14,7 @@ app.use(express.json());
 
 ///MODEL POUR LA BDD////
 const PropositionSchema = new mongoose.Schema({
+  _id: ObjectId,
   sujet: String,
   description: String,
   cout: Number,
@@ -23,10 +22,11 @@ const PropositionSchema = new mongoose.Schema({
   quantite: Number,
   estValide: Boolean,
   caracteristiques: [String],
-})
+},{ _id: false })
 
 const ContrePropositionSchema = new mongoose.Schema({
   proposition: { type: mongoose.Schema.Types.ObjectId, ref: "Proposition" },
+  _id: ObjectId,
   reponse: String,
   cout: Number,
   delai: String,
@@ -34,7 +34,7 @@ const ContrePropositionSchema = new mongoose.Schema({
   estValide: Boolean,
   estAccepte: Boolean,
   caracteristiques: [String],
-})
+},{ _id: false })
 
 const PropositionBDD = mongoose.model("Proposition", PropositionSchema);
 const ContrePropositionBDD = mongoose.model("ContreProposition", ContrePropositionSchema);
@@ -86,15 +86,6 @@ async function main() {
   const pouet = await kitten.find({ _id: prout._id });
   console.log(pouet);*/
 }
-
-
-
-
-//Variables globales
-let proposition = new Proposition();
-let contrePropositions = new ListeProp();
-let propositions = new ListeProp();
-
 ///GESTION DE L'API ET DES ENDPONTS/////////////////
 
 
@@ -144,13 +135,6 @@ app.post("/updateContreProposition", (req,res) => {
 
 /////GET////////////////////////
 
-app.get("/proposition", (req,res) => {
-   res.json(proposition);
-    proposition = new Proposition();
-    console.log(proposition);
-    res.json(contrePropositions);
- })
-
  app.get("/propositions", (req,res) => {
   (async() => {
     const props = await getPropositions();
@@ -159,16 +143,6 @@ app.get("/proposition", (req,res) => {
   })();
 
 })
-
- app.get("/contreprop", (req,res) => {
-   contrePropositions.vider();
-    contrePropositions.ajouter(new ContreProposition());
-    contrePropositions.ajouter(new ContreProposition());
-    contrePropositions.ajouter(new ContreProposition());
-    res.json(contrePropositions);
-    //contrePropositions.supprimer(contreProp);
-    console.log(contrePropositions);
-  })
 
   app.post("/contrePropositions", (req,res) => {
     (async() => {
@@ -208,14 +182,14 @@ console.log("The WebSocket server is running on port "+portSocket);
 ////////ADD////////////////////
 //Ajout d'une proposition
 async function addProposition(demande,description,cout,delai,caracteristiques,quantite) {
-  const propositionBDD = new PropositionBDD({sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:false,quantite:quantite});
+  const propositionBDD = new PropositionBDD({_id: new mongoose.Types.ObjectId().toHexString(),sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:false,quantite:quantite});
   await propositionBDD.save();
   return propositionBDD;
 }
 
 //Renvoi la liste des contre propositions d'une proposition
 async function addContreProposition( proposition_id,reponse,cout,delai,quantite,caracteristiques) {
-  const contre = new ContrePropositionBDD({proposition:proposition_id,reponse:reponse,cout:cout,delai:delai,quantite:quantite,estValide:false,estAccepte:false,caracteristiques:caracteristiques});
+  const contre = new ContrePropositionBDD({_id: new mongoose.Types.ObjectId().toHexString(),proposition:proposition_id,reponse:reponse,cout:cout,delai:delai,quantite:quantite,estValide:false,estAccepte:false,caracteristiques:caracteristiques});
   await contre.save();
   return contre;
 }

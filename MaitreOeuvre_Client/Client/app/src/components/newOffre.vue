@@ -99,21 +99,9 @@ export default {
 
             request(options, (err, res) => {
                 console.log(res);
+                alert("Votre offre a bien été envoyée");
+                this.$router.push("/offre/all");
             });
-
-              /*fetch('http://localhost:3000/addProposition', {
-                    method: 'post',
-                    body: JSON.stringify({
-                        "demande": document.getElementById("demande").value,
-                        "cout": document.getElementById("cout").value,
-                        "delai": document.getElementById("delai").value,
-                        "quantite": document.getElementById("quantite").value,
-                        "caracteristiques": list
-                    })
-                }).then(function(response) {
-                    console.log(response);
-                });*/
-
             }
         }
     }
