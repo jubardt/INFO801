@@ -9,7 +9,7 @@ import ListPropositions from '@/components/ListPropositions.vue'
 const routes = [
     {
         name: 'liste',
-        path: '/liste',
+        path: '/liste/:id',
         component: listes,
     },
     {

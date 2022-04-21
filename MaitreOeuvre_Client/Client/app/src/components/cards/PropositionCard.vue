@@ -3,7 +3,7 @@
         <div class="message-header">
             <p>Proposition: {{proposition.sujet}}</p>
         </div>
-        <div class="message-body">
+        <div class="message-body" @click="goTo('/liste/'+proposition._id)">
             <h1 class="title"><strong>Description:</strong> {{proposition.description}} </h1>
             <h1 class="title"><strong>Cout:</strong> {{proposition.cout}} €</h1>
             <h1 class="title"><strong>Délai:</strong> {{proposition.delai}} </h1>
@@ -16,6 +16,11 @@
 <script>
 export default {
     props: ['proposition'],
+    methods: {
+        goTo(path){
+            this.$router.push(path);
+        },
+    }
 }
 </script>
 

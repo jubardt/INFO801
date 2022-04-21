@@ -170,7 +170,7 @@ app.get("/proposition", (req,res) => {
     console.log(contrePropositions);
   })
 
-  app.get("/contrePropositions", (req,res) => {
+  app.post("/contrePropositions", (req,res) => {
     (async() => {
       const props = await getContrePropositions(req.body.proposition_id);
       console.log(props);

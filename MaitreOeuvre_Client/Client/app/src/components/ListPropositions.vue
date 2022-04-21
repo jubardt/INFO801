@@ -1,8 +1,7 @@
 <template>
   <div class="all">
-    <h1 class="title">Listes des propositions clients</h1>
-
         <div v-if="isLoaded">
+            <h1 class="title">Listes des propositions clients</h1>
             <div v-for="element in listeRequete" :key="element.id">
                 <PropositionCard v-bind:proposition="element" :key="element.id" />
             </div>
@@ -22,7 +21,7 @@ import PropositionCard from './cards/PropositionCard.vue'
 export default {
   name: "listes",
   components: {
-    PropositionCard
+    PropositionCard,
   },
   data() {
     return {
@@ -33,10 +32,9 @@ export default {
   mounted() {
     request('http://localhost:3000/propositions', { json: true }, (err, res) => {
       if (err) { return console.log(err); }
-      console.log(res.body);
+      console.log(res.body)
       this.listeRequete = res.body;
       this.isLoaded = true;
-      console.log(this.listeRequete);
     });
   },
 }
