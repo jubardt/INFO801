@@ -127,6 +127,15 @@ app.post("/updateProposition", (req,res) => {
   })();
 })
 
+app.post("/updateContreProposition", (req,res) => {
+  (async() => {
+    var propAdd = await updateContreProposition(req.body.proposition_id,req.body.reponse,req.body.cout,req.body.delai,req.body.quantite,req.body.caracteristiques,req.body.estValide,req.body.estAccepte);
+    res.status(200).send("ajout réussi !");
+    const caca = await getContrePropositions();
+    console.log(caca); 
+  })();
+})
+
 
 
 
@@ -205,8 +214,19 @@ async function addContreProposition( proposition_id,reponse,cout,delai,quantite,
 
 
 ///////UPDATE////////////////////
-async function updateProposition(proposition_id,demande,description,cout,delai,caracteristiques,quantite) {
-  PropositionBDD.updateOne({_id:proposition_id},{sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:false,quantite:quantite},function(err,res){});
+async function updateProposition(proposition_id,demande,description,cout,delai,caracteristiques,quantite, estValide) {
+  PropositionBDD.updateOne({_id:proposition_id},{sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:estValide,quantite:quantite},function(err,res){});
+}
+
+async function updateContreProposition(proposition_id,reponse,cout,delai,quantite,caracteristiques,estValide,estAccepte) {
+  ContrePropositionBDD.updateOne({_id:proposition_id},{
+  reponse: reponse,
+  cout: cout,
+  delai: delai,
+  quantite: quantite,
+  estValide: estValide,
+  estAccepte: estAccepte,
+  caracteristiques: caracteristiques},function(err,res){});
 }
 
 /////GET//////////
