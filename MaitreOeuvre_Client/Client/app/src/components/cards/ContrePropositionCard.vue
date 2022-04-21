@@ -1,7 +1,7 @@
 <template>
     <article class="message is-warning">
         <div class="message-header">
-            <p>Proposition: {{proposition.sujet}}</p>
+            <p>Contre proposition de fabriquant</p>
         </div>
         <div class="message-body">
             <h1 class="title"><strong>Réponse du fabriquant:</strong> {{proposition.reponse}} </h1>

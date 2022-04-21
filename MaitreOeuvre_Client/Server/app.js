@@ -178,6 +178,14 @@ app.get("/proposition", (req,res) => {
     })();
    })
 
+   app.post("/isAccepted", (req,res) => {
+    (async() => {
+      const props = await isContrePropAccepted(req.body.proposition_id);
+      console.log(props);
+      res.status(200).send(props); 
+    })();
+   })
+
 
 
 
@@ -241,9 +249,15 @@ async function getPropositions() {
   return propositionsBDD;
 }
 
-async function isContrePropAccepted() {
-  const propositionsBDD =  await PropositionBDD.find();
-  return propositionsBDD;
+async function isContrePropAccepted(id_contreProposition) {
+  var contreProps = await ContrePropositionBDD.find({proposition:id_contreProposition,estAccepte:true});
+  console.log(contreProps);
+  //contreProps = JSON.parse(contreProps);
+  if(contreProps.length>0){
+    return true;
+  }else{
+    return false;
+  }
 }
 
 
