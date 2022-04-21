@@ -49,6 +49,12 @@ export default {
         var mdp = document.getElementById("mdp").value;
         if(user == "admin" && mdp == "1234"){
             localStorage.setItem("user","true");
+            localStorage.setItem("isClient","false");
+            this.close();
+            this.isConnected = true;
+        }else if(user == "client" && mdp == "0000"){
+            localStorage.setItem("user","true");
+            localStorage.setItem("isClient","true");
             this.close();
             this.isConnected = true;
         }else{

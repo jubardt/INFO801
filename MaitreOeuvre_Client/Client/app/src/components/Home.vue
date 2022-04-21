@@ -20,10 +20,19 @@ export default {
     components: {
         Header,
       },
-   
+
       methods:{
         goTo(path){
+          if("/offre" == path){
+            if(localStorage.getItem('user') == "false"){
+                alert("Vous devez être connecté en tant que client pour avoir accès à cette page");
+            }else{
+                this.$router.push(path);
+            }
+          }else{
             this.$router.push(path);
+          }
+            
         },
     }
 }

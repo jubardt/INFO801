@@ -26,7 +26,7 @@ const request = require('request');
 export default {
     props: ['proposition'],
     mounted(){
-        this.isConnected = localStorage.getItem('user') == "true";
+        this.isConnected = (localStorage.getItem('user') == "true") && (localStorage.getItem('isClient') == "false");
     },
     data(){
         return {
