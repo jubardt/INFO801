@@ -9,7 +9,7 @@
             <h1 class="title"><strong>Délai:</strong> {{proposition.delai}} </h1>
             <h1 class="title"><strong>Quantite:</strong> {{proposition.quantite}} </h1>
             <h1 class="title"><strong>Caractérisques:</strong> {{proposition.caracteristiques}} </h1>
-            <button class="button is-primary">Accepter</button>
+            <button v-if="!proposition.estAccepte" class="button is-primary" @click="acceptContre">Accepter</button>
             <button class="button is-warning" @click="deleteContre">Refuser(Contre proposition insatisfaisante)</button>
         </div>
     </article>
@@ -44,7 +44,26 @@ export default {
                 request(options, (err, res) => {
                     console.log(res.body);
                     alert("Refus de la proposition confirmé");
-                    this.$router.push("/liste/"+this.proposition.proposition);
+                    location.reload();
+                });
+        },
+        acceptContre(){
+            var options = {
+                url:"http://localhost:3000/acceptContreProposition",
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                        "id_proposition": this.proposition._id,
+                        "id_contreProposition":this.proposition.proposition
+                    })
+                };
+
+                request(options, (err, res) => {
+                    console.log(res.body);
+                    alert(res.body);
                     location.reload();
                 });
         }

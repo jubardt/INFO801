@@ -107,6 +107,13 @@ app.post("/addContreProposition", (req,res) => {
   })();
 })
 
+app.post("/acceptContreProposition", (req,res) => {
+  (async() => {
+    var propAdd = await acceptContreProposition(req.body.id_proposition,req.body.id_contreProposition);
+    res.status(200).send("Proposition accepté avec succès !");
+  })();
+})
+
 //////UPDATE///////////////////
 app.post("/updateProposition", (req,res) => {
   (async() => {
@@ -245,6 +252,18 @@ async function isContrePropAccepted(id_contreProposition) {
   }else{
     return false;
   }
+}
+
+async function acceptContreProposition(id_contreProposition,id_proposition) {
+  const estAccepte = await isContrePropAccepted(id_proposition);
+  if(!estAccepte){
+    const valid = await ContrePropositionBDD.updateOne({_id:id_contreProposition},{estAccepte:true},function(err,res){});
+    return true;
+  }else{
+    return false;
+  }
+   
+  
 }
 
 
