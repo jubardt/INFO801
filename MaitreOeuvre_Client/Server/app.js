@@ -127,9 +127,14 @@ app.post("/updateContreProposition", (req,res) => {
   })();
 })
 
+////DELETE////////////////////
+app.post("/deleteContreProposition", (req,res) => {
+  (async() => {
+    var propAdd = await deleteContreProposition(req.body.proposition_id);
+    res.status(200).send("suppression réussi !");
+  })();
 
-
-
+});
 
 
 
@@ -209,6 +214,14 @@ async function updateContreProposition(proposition_id,reponse,cout,delai,quantit
   estValide: estValide,
   estAccepte: estAccepte,
   caracteristiques: caracteristiques},function(err,res){});
+}
+
+
+/////DELETE////////////////////
+async function deleteContreProposition(proposition_id) {
+  ContrePropositionBDD.deleteOne({_id:proposition_id},function(err,res){
+    console.log(res);
+  });
 }
 
 /////GET//////////
