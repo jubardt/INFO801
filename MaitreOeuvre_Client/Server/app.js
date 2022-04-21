@@ -209,7 +209,7 @@ async function addContreProposition( proposition_id,reponse,cout,delai,quantite,
 
 ///////UPDATE////////////////////
 async function updateProposition(proposition_id,demande,description,cout,delai,caracteristiques,quantite, estValide) {
-  PropositionBDD.updateOne({_id:proposition_id},{sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:estValide,quantite:quantite},function(err,res){});
+  PropositionBDD.updateOne({_id:proposition_id},{sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:estValide,quantite:quantite});
 }
 
 async function updateContreProposition(proposition_id,reponse,cout,delai,quantite,caracteristiques,estValide,estAccepte) {
@@ -220,7 +220,7 @@ async function updateContreProposition(proposition_id,reponse,cout,delai,quantit
   quantite: quantite,
   estValide: estValide,
   estAccepte: estAccepte,
-  caracteristiques: caracteristiques},function(err,res){});
+  caracteristiques: caracteristiques});
 }
 
 
@@ -257,7 +257,7 @@ async function isContrePropAccepted(id_contreProposition) {
 async function acceptContreProposition(id_contreProposition,id_proposition) {
   const estAccepte = await isContrePropAccepted(id_proposition);
   if(!estAccepte){
-    const valid = await ContrePropositionBDD.updateOne({_id:id_contreProposition},{estAccepte:true},function(err,res){});
+    await ContrePropositionBDD.updateOne({_id:id_contreProposition},{estAccepte:true});
     return true;
   }else{
     return false;
