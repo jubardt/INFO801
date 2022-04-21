@@ -9,6 +9,9 @@
     <button class="button is-primary" @click="goTo('/liste')">
       Liste des reponses des fabriquants
     </button>
+    <button class="button is-primary" @click="goTo('/offre/all')">
+      Liste de vos propositions
+    </button>
   </div>
 </template>
 

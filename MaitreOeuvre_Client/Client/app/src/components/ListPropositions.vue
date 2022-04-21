@@ -34,7 +34,7 @@ export default {
     request('http://localhost:3000/propositions', { json: true }, (err, res) => {
       if (err) { return console.log(err); }
       console.log(res.body);
-      this.listeRequete = res.body.liste;
+      this.listeRequete = res.body;
       this.isLoaded = true;
       console.log(this.listeRequete);
     });

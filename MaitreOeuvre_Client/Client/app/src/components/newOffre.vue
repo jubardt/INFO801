@@ -11,6 +11,14 @@
             </div>
 
             <div class="field">
+                <label class="label">Description du projet: </label>
+                <div class="control">
+                  <textarea id="description" class="textarea" placeholder="Cette production de raquette doit permettre ..."/>
+                </div>
+                <p class="help">Description en quelques lignes du projet proposé</p>
+            </div>
+
+            <div class="field">
                 <label class="label">Cout: </label>
                 <div class="control">
                   <input id="cout" class="input" type="number" placeholder="60 000 €">
@@ -81,6 +89,7 @@ export default {
                 },
                 body: JSON.stringify({
                         demande: document.getElementById("demande").value,
+                        description: document.getElementById("description").value,
                         cout: document.getElementById("cout").value,
                         delai: document.getElementById("delai").value,
                         quantite: document.getElementById("quantite").value,
