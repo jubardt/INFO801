@@ -116,6 +116,17 @@ app.post("/addContreProposition", (req,res) => {
   })();
 })
 
+//////UPDATE///////////////////
+app.post("/updateProposition", (req,res) => {
+  (async() => {
+    var propAdd = await updateProposition(req.body.proposition_id,req.body.demande,req.body.description,req.body.cout,req.body.delai,req.body.caracteristiques,req.body.quantite);
+    console.log(propAdd);
+    res.status(200).send("ajout réussi !");
+    const caca = await getPropositions();
+    console.log(caca); 
+  })();
+})
+
 
 
 
@@ -150,6 +161,16 @@ app.get("/proposition", (req,res) => {
     console.log(contrePropositions);
   })
 
+  app.get("/contrePropositions", (req,res) => {
+    (async() => {
+      const props = await getContrePropositions(req.body.proposition_id);
+      console.log(props);
+      res.status(200).send(props); 
+    })();
+   })
+
+
+
 
 app.listen(portAPI, () => console.log(`Example app listening on port ${portAPI}!`));
 
@@ -166,12 +187,8 @@ console.log("The WebSocket server is running on port "+portSocket);
 
 
 
-//Renvoi la liste des propositions
-async function getPropositions() {
-  const propositionsBDD =  await PropositionBDD.find();
-  return propositionsBDD;
-}
 
+////////ADD////////////////////
 //Ajout d'une proposition
 async function addProposition(demande,description,cout,delai,caracteristiques,quantite) {
   const propositionBDD = new PropositionBDD({sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:false,quantite:quantite});
@@ -186,8 +203,21 @@ async function addContreProposition( proposition_id,reponse,cout,delai,quantite,
   return contre;
 }
 
+
+///////UPDATE////////////////////
+async function updateProposition(proposition_id,demande,description,cout,delai,caracteristiques,quantite) {
+  PropositionBDD.updateOne({_id:proposition_id},{sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:false,quantite:quantite},function(err,res){});
+}
+
+/////GET//////////
 async function getContrePropositions(id_proposition) {
   const contrePropositionBDD = await ContrePropositionBDD.find({proposition:id_proposition});
   return contrePropositionBDD;
+}
+
+//Renvoi la liste des propositions
+async function getPropositions() {
+  const propositionsBDD =  await PropositionBDD.find();
+  return propositionsBDD;
 }
 
