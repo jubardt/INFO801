@@ -111,7 +111,9 @@ app.post("/addContreProposition", (req,res) => {
 
 app.post("/acceptContreProposition", (req,res) => {
   (async() => {
-    var propAdd = await acceptContreProposition(req.body.id_proposition,req.body.id_contreProposition);
+    console.log(req.body.id_contreProposition);
+    console.log(req.body.id_proposition);
+    var propAdd = await acceptContreProposition(req.body.id_contreProposition,req.body.id_proposition);
     res.status(200).send("Proposition accepté avec succès !");
   })();
 })
@@ -129,7 +131,7 @@ app.post("/updateProposition", (req,res) => {
 
 app.post("/updateContreProposition", (req,res) => {
   (async() => {
-    var propAdd = await updateContreProposition(req.body.proposition_id,req.body.reponse,req.body.cout,req.body.delai,req.body.quantite,req.body.caracteristiques,req.body.estValide,req.body.estAccepte);
+    var propAdd = await updateContreProposition(req.body.proposition_id,req.body.proposition,req.body.reponse,req.body.cout,req.body.delai,req.body.quantite,req.body.caracteristiques,req.body.estValide,req.body.estAccepte);
     res.status(200).send("ajout réussi !");
     const caca = await getContrePropositions();
     console.log(caca); 
@@ -186,8 +188,9 @@ wss.on("connection", ws => {
   validOffre(ws); //On envoie les offres déjà valides
   ws.on("message", (data,isBinary) =>{
     console.log("message reçu: "+data);
-    if(data.action == "newContreOffre"){
-      addContrePropositionWithId(data.data._id,data.data.proposition,data.data.reponse,data.data.cout,data.data.delai,data.data.quantite,data.data.caracteristiques);
+    dataJS = JSON.parse(data);
+    if(dataJS.action == "newContreOffre"){
+      addContrePropositionWithId(dataJS.data._id,dataJS.data.proposition,dataJS.data.reponse,dataJS.data.cout,dataJS.data.delai,dataJS.data.quantite,dataJS.data.caracteristiques);
     }
   });
 });
@@ -229,7 +232,7 @@ async function updateProposition(proposition_id,demande,description,cout,delai,c
   }
 }
 
-async function updateContreProposition(proposition_id,reponse,cout,delai,quantite,caracteristiques,estValide,estAccepte) {
+async function updateContreProposition(proposition_id,proposition,reponse,cout,delai,quantite,caracteristiques,estValide,estAccepte) {
   ContrePropositionBDD.updateOne({_id:proposition_id},{
   reponse: reponse,
   cout: cout,
@@ -238,7 +241,8 @@ async function updateContreProposition(proposition_id,reponse,cout,delai,quantit
   estValide: estValide,
   estAccepte: estAccepte,
   caracteristiques: caracteristiques});
-  accepteContreOffreWs(proposition_id);
+
+  
 }
 
 
@@ -247,7 +251,7 @@ async function deleteContreProposition(proposition_id) {
   ContrePropositionBDD.deleteOne({_id:proposition_id},function(err,res){
     console.log(res);
   });
-  refuseContreOffreWs(contreProp_id);
+  refuseContreOffreWs(proposition_id);
 }
 
 /////GET//////////
@@ -264,6 +268,7 @@ async function getPropositions() {
 
 async function isContrePropAccepted(id_contreProposition) {
   var contreProps = await ContrePropositionBDD.find({proposition:id_contreProposition,estAccepte:true});
+  console.log("j'ai fait la recherche");
   console.log(contreProps);
   //contreProps = JSON.parse(contreProps);
   if(contreProps.length>0){
@@ -276,7 +281,10 @@ async function isContrePropAccepted(id_contreProposition) {
 async function acceptContreProposition(id_contreProposition,id_proposition) {
   const estAccepte = await isContrePropAccepted(id_proposition);
   if(!estAccepte){
+    console.log("je suis là");
     await ContrePropositionBDD.updateOne({_id:id_contreProposition},{estAccepte:true});
+    console.log("j'ai modifié");
+    //accepteContreOffreWs(id_contreProposition,id_proposition);
     return true;
   }else{
     return false;
@@ -319,15 +327,16 @@ async function refuseContreOffreWs(contreProp_id){
     data.action = "deleteOffre";
     data.data = {contreProp_id:contreProp_id};
     console.log(data);
-    broadcast(data);
+    broadcast(JSON.stringify(data));
 }
 
-async function accepteContreOffreWs(contreProp_id){
+async function accepteContreOffreWs(contreProp_id,proposition){
+  console.log("acccepte");
   data = {}
   data.action = "acceptOffre";
-  data.data = {contreProp_id:contreProp_id};
+  data.data = {contreProp_id:contreProp_id,proposition:proposition};
   console.log(data);
-  broadcast(data);
+  broadcast(JSON.stringify(data));
 }
 
 

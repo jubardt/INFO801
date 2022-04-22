@@ -95,7 +95,8 @@
             <div>Validé par le maitre d'oeuvre:<strong> {{contrePropositions.estValide?"OUI":"NON"}}</strong></div>
             <div>
                 <button class="button is-warning" @click="modifContreProp">Modifier la contre proposition</button>
-                <p><strong>Votre proposition n'a pas encore été traité par le client</strong></p>
+                <p v-if="!contrePropositions.estAccepte"><strong>Votre proposition n'a pas encore été traité par le client</strong></p>
+                <p v-else><strong>Votre proposition a été accepté par le client !</strong></p>
             </div>
 
         </div>

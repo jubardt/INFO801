@@ -56,8 +56,8 @@ export default {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                        "id_proposition": this.proposition._id,
-                        "id_contreProposition":this.proposition.proposition
+                        "id_proposition": this.proposition.proposition,
+                        "id_contreProposition": this.proposition._id
                     })
                 };
 

@@ -47,7 +47,7 @@ const ContrePropositionBDD = mongoose.model("ContreProposition", ContrePropositi
 main().catch(error => console.error(error));
 
 let client = new WebSocketClient();
-
+let connectionWS;
 
 
 
@@ -55,7 +55,9 @@ async function main() {
 
   //INITIALISATION DES LISTES DE PROPOSITIONS ET DE CONTRE-PROPOSITIONS
   await mongoose.connect("mongodb://localhost:27017/fabriquant1");
+  
   client.on('connect', function(connection) {
+    connectionWS = connection;
     console.log('WebSocket Client Connected');
     connection.on('error', function(error) {
         console.log("Connection Error: " + error.toString());
@@ -64,10 +66,18 @@ async function main() {
         console.log('echo-protocol Connection Closed');
     });
     connection.on('message', function(message) {
+      console.log("Message reçu: " + message.utf8Data);
       var action = JSON.parse(message.utf8Data).action;
       var data = JSON.parse(message.utf8Data).data;
       if(action == "newOffre"){
         majProposition(data);
+      }
+      if(action == "deleteOffre"){
+        deleteContreProposition(data.contreProp_id);
+      }
+      if(action == "acceptOffre"){
+        //console.log("offre acceptée avec proposition "+data.proposition+" ,contre proposition "+data.contreProp_id);
+        verifIsvalide(data.contreProp_id,data.proposition);
       }
     });
   });
@@ -214,14 +224,22 @@ async function updateProposition(proposition_id,demande,description,cout,delai,c
 }
 
 async function updateContreProposition(proposition_id,reponse,cout,delai,quantite,caracteristiques,estValide,estAccepte) {
-  ContrePropositionBDD.updateOne({_id:proposition_id},{
+  await ContrePropositionBDD.updateOne({_id:proposition_id},{
   reponse: reponse,
   cout: cout,
   delai: delai,
   quantite: quantite,
   estValide: estValide,
   estAccepte: estAccepte,
-  caracteristiques: caracteristiques},(err,res) => {console.log(res);});
+  caracteristiques: caracteristiques});
+    if(estValide){
+      const contre = await getContreProposition(proposition_id);
+      var data = {};
+      data.action = "newContreOffre";
+      data.data = contre;
+      connectionWS.sendUTF(JSON.stringify(data));
+      
+    }
 }
 
 
@@ -276,11 +294,11 @@ async function getProposition(propositionId) {
 //Renvoi la proposition ayant cette id
 async function getContreProposition(propositionId) {
   const propositionBDD =  await ContrePropositionBDD.find({_id:propositionId});
-  return propositionBDD;
+  return propositionBDD[0];
 }
 
 async function deleteAllContreProposition(propositionId) {
-  await ContrePropositionBDD.deleteMany({proposition:propositionId},function(err,res){});
+  await ContrePropositionBDD.deleteMany({proposition:propositionId});
 }
 
 async function deleteAllProposition() {
@@ -293,6 +311,15 @@ async function majProposition(data){
   data.forEach(element => {
     addPropositionWithId(element._id,element.sujet,element.description,element.cout,element.delai,element.caracteristiques,element.quantite)
   });
+}
+
+async function verifIsvalide(propositionId,proposition){
+  const contreProp = await getContreProposition(propositionId);
+  if(contreProp!=null){
+    updateContreProposition(contreProp._id,contreProp.reponse,contreProp.cout,contreProp.delai,contreProp.quantite,contreProp.caracteristiques,true,true)
+  }else{
+    deleteAllContreProposition(proposition);
+  }
 }
 
 
