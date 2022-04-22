@@ -167,6 +167,7 @@ const request = require('request');
         },
         mounted(){
             this.idProp = this.$route.params.id;
+            console.log(this.idProp)
             this.isMaitreOeuvre = localStorage.getItem("userfab1") == "true";
             var options = {
                 url:"http://localhost:4000/proposition",
@@ -196,7 +197,7 @@ const request = require('request');
                         };
                         request(optionContre,(errC,resC) =>{
                             this.contrePropositions = JSON.parse(resC.body)[0];
-                            console.log(this.contrePropositions);
+                            console.log(resC.body);
                             this.isLoaded = true;
                         });
                     });

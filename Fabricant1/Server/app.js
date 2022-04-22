@@ -158,7 +158,7 @@ app.post("/deleteContreProposition", (req,res) => {
 
 app.post("/proposition", (req,res) => {
   (async() => {
-    const props = await getPropositions(req.body.proposition_id);
+    const props = await getProposition(req.body.proposition_id);
     console.log(props);
     res.status(200).send(props); 
   })();
