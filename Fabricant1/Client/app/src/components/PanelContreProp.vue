@@ -93,6 +93,7 @@
                 </div>
             </div>
             <div>Validé par le maitre d'oeuvre:<strong> {{contrePropositions.estValide?"OUI":"NON"}}</strong></div>
+            <button class="button is-warning" @click="modifContreProp">Modifier la contre proposition</button>
             <strong>Votre proposition n'a pas encore été traité par le client</strong>
         </div>
         <div v-else-if="isMaitreOeuvre && contrePropositions!=null">
@@ -137,7 +138,7 @@
                     
                 </div>
             </div>
-            <button class="button is-primary">Valider la contre-proposition</button>
+            <button class="button is-primary" @click="validContreProp">Valider la contre-proposition</button>
             <strong>La proposition n'a pas encore été traité par le client</strong>
         </div>
         <div v-else>
@@ -210,6 +211,39 @@ const request = require('request');
                 caract.appendChild(input);
             },
             sendContreProp(){
+                var list = [];
+                document.getElementById("listCaract").querySelectorAll("input").forEach(function(e){
+                    list.push(e.value);
+                });
+                
+                var options = {
+                    url:"http://localhost:4000/addContreProposition",
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                            proposition_id:this.proposition._id,
+                            reponse: document.getElementById("reponse").value,
+                            cout: document.getElementById("cout").value,
+                            delai: document.getElementById("delai").value,
+                            quantite: document.getElementById("quantite").value,
+                            caracteristiques: list
+                        })
+                    };
+
+                request(options, (err, res) => {
+                    console.log(res);
+                    alert("Votre proposition à bien été ajouté ! Elle est en attente de validation par le maitre d'oeuvre avant envoi au client");
+                    location.reload();
+                });
+            },
+            modifContreProp(){
+
+            },
+            validContreProp(){
+
             }
         }
     }
