@@ -45,6 +45,7 @@ const ContrePropositionBDD = mongoose.model("ContreProposition", ContrePropositi
 //////TEST MONGOOSE//////
 main().catch(error => console.error(error));
 
+
 async function main() {
 
   //INITIALISATION DES LISTES DE PROPOSITIONS ET DE CONTRE-PROPOSITIONS
@@ -182,7 +183,7 @@ app.listen(portAPI, () => console.log(`Example app listening on port ${portAPI}!
 
 ///GESTION DU WEBSOCKET ENTRE LES ESPACES DE TUPLES
 wss.on("connection", ws => {
-  validOffreWs(); //On envoie les offres déjà valides
+  validOffre(ws); //On envoie les offres déjà valides
   ws.on("message", (data,isBinary) =>{
     console.log("message reçu: "+data);
     if(data.action == "newContreOffre"){
@@ -301,8 +302,18 @@ async function validOffreWs(){
     data = {}
     data.action = "newOffre";
     data.data = propositions;
-    console.log(data);
-    broadcast(data);
+    console.log(JSON.stringify(data));
+    broadcast(JSON.stringify(data));
+  }
+}
+
+async function validOffre(ws){
+  const propositions = await PropositionBDD.find({estValide:true});
+  if(propositions.length>0){
+    data = {}
+    data.action = "newOffre";
+    data.data = propositions;
+    ws.send(JSON.stringify(data));
   }
 }
 

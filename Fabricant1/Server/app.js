@@ -3,6 +3,7 @@ var cors = require('cors')
 const mongoose = require("mongoose");
 const app = express();
 const portAPI = 4000;
+var WebSocketClient = require('websocket').client;
 
 const WebSocketServer = require('ws');
 const { ObjectId } = require("mongodb");
@@ -45,46 +46,34 @@ const ContrePropositionBDD = mongoose.model("ContreProposition", ContrePropositi
 //////TEST MONGOOSE//////
 main().catch(error => console.error(error));
 
+let client = new WebSocketClient();
+
+
+
+
 async function main() {
 
   //INITIALISATION DES LISTES DE PROPOSITIONS ET DE CONTRE-PROPOSITIONS
-  await mongoose.connect("mongodb://localhost:27017/app");
-  /*const test = new PropositionBDD({sujet:"test",description:"Une batterie de test pour voir si ça marche",cout:0,delai:"5 jours",quantite:0,estValide:false,caracteristiques:["Robuste","Métallique","flexible"]});
-  await test.save();
-  const testContre = new ContrePropositionBDD({proposition:test._id,reponse:"Une batterie de test pour voir si ça marche",cout:0,delai:"5 jours",quantite:0,estValide:false,estAccepte:false,caracteristiques:["Robuste","Métallique","flexible"]});
-  testContre.save();
-  const propositionsBDD = await PropositionBDD.find();
-  const contrePropositionBDD = await ContrePropositionBDD.find();
-  console.log(propositionsBDD);
-  console.log(contrePropositionBDD);*/
-
-
-  //////EXEMPLES MONGOOSE//////
-
-  /*const kittySchema = new mongoose.Schema({
-    name: String
+  await mongoose.connect("mongodb://localhost:27017/fabriquant1");
+  client.on('connect', function(connection) {
+    console.log('WebSocket Client Connected');
+    connection.on('error', function(error) {
+        console.log("Connection Error: " + error.toString());
+    });
+    connection.on('close', function() {
+        console.log('echo-protocol Connection Closed');
+    });
+    connection.on('message', function(message) {
+      var action = JSON.parse(message.utf8Data).action;
+      var data = JSON.parse(message.utf8Data).data;
+      if(action == "newOffre"){
+        majProposition(data);
+      }
+    });
   });
   
-  kittySchema.methods.speak = function speak() {
-    const greeting = this.name
-      ? "Meow name is " + this.name
-      : "I don't have a name";
-    console.log(greeting);
-  }
   
-  
-  const kitten = mongoose.model("kitten", kittySchema);
-  const silence = new kitten({ name: "Silence" });
-  const prout = new kitten({ name: 'prout' });
-  await prout.save();
-  await silence.save();
-
-  
-  const kittens = await kitten.find();
-  //console.log(kittens);
-  console.log(prout._id);
-  const pouet = await kitten.find({ _id: prout._id });
-  console.log(pouet);*/
+  client.connect("ws://localhost:9000/", 'echo-protocol');
 }
 ///GESTION DE L'API ET DES ENDPONTS/////////////////
 
@@ -194,16 +183,6 @@ app.listen(portAPI, () => console.log(`Example app listening on port ${portAPI}!
 
 
 
-///GESTION DU WEBSOCKET ENTRE LES ESPACES DE TUPLES
-wss.on("connection", ws => {
-  ws.on("message", (data,isBinary) =>{
-    console.log("message reçu: "+data);
-    ws.send("Oui je t'entends !!!!!");
-  });
-});
-console.log("The WebSocket server is running on port "+portSocket);
-
-
 
 
 ////////ADD////////////////////
@@ -211,6 +190,13 @@ console.log("The WebSocket server is running on port "+portSocket);
 async function addProposition(demande,description,cout,delai,caracteristiques,quantite) {
   const propositionBDD = new PropositionBDD({_id: new mongoose.Types.ObjectId().toHexString(),sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:false,quantite:quantite});
   await propositionBDD.save();
+  return propositionBDD;
+}
+
+async function addPropositionWithId(id,demande,description,cout,delai,caracteristiques,quantite) {
+  const propositionBDD = new PropositionBDD({_id: id,sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:true,quantite:quantite});
+  await propositionBDD.save();
+  console.log(propositionBDD);
   return propositionBDD;
 }
 
@@ -294,7 +280,19 @@ async function getContreProposition(propositionId) {
 }
 
 async function deleteAllContreProposition(propositionId) {
-  await ContrePropositionBDD.deleteMany({proposition:propositionId});
+  await ContrePropositionBDD.deleteMany({proposition:propositionId},function(err,res){});
+}
+
+async function deleteAllProposition() {
+  await PropositionBDD.deleteMany({});
+}
+
+async function majProposition(data){
+  await deleteAllProposition();
+
+  data.forEach(element => {
+    addPropositionWithId(element._id,element.sujet,element.description,element.cout,element.delai,element.caracteristiques,element.quantite)
+  });
 }
 
 
