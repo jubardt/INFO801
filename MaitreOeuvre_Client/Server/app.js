@@ -49,6 +49,7 @@ async function main() {
 
   //INITIALISATION DES LISTES DE PROPOSITIONS ET DE CONTRE-PROPOSITIONS
   await mongoose.connect("mongodb://localhost:27017/app");
+  validOffreWs();
   /*const test = new PropositionBDD({sujet:"test",description:"Une batterie de test pour voir si ça marche",cout:0,delai:"5 jours",quantite:0,estValide:false,caracteristiques:["Robuste","Métallique","flexible"]});
   await test.save();
   const testContre = new ContrePropositionBDD({proposition:test._id,reponse:"Une batterie de test pour voir si ça marche",cout:0,delai:"5 jours",quantite:0,estValide:false,estAccepte:false,caracteristiques:["Robuste","Métallique","flexible"]});
@@ -266,5 +267,42 @@ async function acceptContreProposition(id_contreProposition,id_proposition) {
   
 }
 
+
+
+
+
+
+function broadcast(data){
+  wss.clients.forEach(function each(client) {
+      client.send(data);
+  });
+}
+
+async function validOffreWs(){
+  const propositions = await PropositionBDD.find({estValide:true});
+  if(propositions.length>0){
+    data = {}
+    data.action = "newOffre";
+    data.data = propositions;
+    console.log(data);
+    broadcast(data);
+  }
+}
+
+async function refuseContreOffreWs(contreProp_id,reponse){
+    data = {}
+    data.action = "deleteOffre";
+    data.data = {contreProp_id:contreProp_id,reponse:reponse};
+    console.log(data);
+    broadcast(data);
+}
+
+async function accepteContreOffreWs(contreProp_id,reponse){
+  data = {}
+  data.action = "acceptOffre";
+  data.data = {contreProp_id:contreProp_id,reponse:reponse};
+  console.log(data);
+  broadcast(data);
+}
 
 
