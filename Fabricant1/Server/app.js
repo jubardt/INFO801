@@ -156,9 +156,26 @@ app.post("/deleteContreProposition", (req,res) => {
 
 })
 
+app.post("/proposition", (req,res) => {
+  (async() => {
+    const props = await getPropositions(req.body.proposition_id);
+    console.log(props);
+    res.status(200).send(props); 
+  })();
+
+})
+
   app.post("/contrePropositions", (req,res) => {
     (async() => {
       const props = await getContrePropositions(req.body.proposition_id);
+      console.log(props);
+      res.status(200).send(props); 
+    })();
+   })
+
+   app.post("/contreProposition", (req,res) => {
+    (async() => {
+      const props = await getContreProposition(req.body.proposition_id);
       console.log(props);
       res.status(200).send(props); 
     })();
@@ -264,6 +281,22 @@ async function acceptContreProposition(id_contreProposition,id_proposition) {
   }
    
   
+}
+
+//Renvoi la proposition ayant cette id
+async function getProposition(propositionId) {
+  const propositionBDD =  await PropositionBDD.find({_id:propositionId});
+  return propositionBDD;
+}
+
+//Renvoi la proposition ayant cette id
+async function getContreProposition(propositionId) {
+  const propositionBDD =  await ContrePropositionBDD.find({_id:propositionId});
+  return propositionBDD;
+}
+
+async function deleteAllContreProposition(propositionId) {
+  await ContrePropositionBDD.deleteMany({proposition:propositionId});
 }
 
 
