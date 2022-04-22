@@ -49,7 +49,7 @@ main().catch(error => console.error(error));
 async function main() {
 
   //INITIALISATION DES LISTES DE PROPOSITIONS ET DE CONTRE-PROPOSITIONS
-  await mongoose.connect("mongodb://localhost:27017/app");
+  await mongoose.connect("mongodb://localhost:27017/client1");
 
   /*const test = new PropositionBDD({sujet:"test",description:"Une batterie de test pour voir si ça marche",cout:0,delai:"5 jours",quantite:0,estValide:false,caracteristiques:["Robuste","Métallique","flexible"]});
   await test.save();
@@ -223,7 +223,7 @@ async function addContrePropositionWithId(id,proposition_id,reponse,cout,delai,q
 
 ///////UPDATE////////////////////
 async function updateProposition(proposition_id,demande,description,cout,delai,caracteristiques,quantite, estValide) {
-  PropositionBDD.updateOne({_id:proposition_id},{sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:estValide,quantite:quantite});
+  await PropositionBDD.updateOne({_id:proposition_id},{sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:estValide,quantite:quantite});
   if(estValide == true){
     validOffreWs();
   }
@@ -298,23 +298,20 @@ function broadcast(data){
 
 async function validOffreWs(){
   const propositions = await PropositionBDD.find({estValide:true});
-  if(propositions.length>0){
-    data = {}
-    data.action = "newOffre";
-    data.data = propositions;
-    console.log(JSON.stringify(data));
-    broadcast(JSON.stringify(data));
-  }
+  data = {}
+  data.action = "newOffre";
+  data.data = propositions;
+  console.log(JSON.stringify(data));
+  broadcast(JSON.stringify(data));
 }
 
 async function validOffre(ws){
   const propositions = await PropositionBDD.find({estValide:true});
-  if(propositions.length>0){
-    data = {}
-    data.action = "newOffre";
-    data.data = propositions;
-    ws.send(JSON.stringify(data));
-  }
+  data = {}
+  data.action = "newOffre";
+  data.data = propositions;
+  ws.send(JSON.stringify(data));
+  
 }
 
 async function refuseContreOffreWs(contreProp_id){
