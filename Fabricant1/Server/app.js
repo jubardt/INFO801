@@ -77,7 +77,7 @@ async function main() {
       }
       if(action == "acceptOffre"){
         //console.log("offre acceptée avec proposition "+data.proposition+" ,contre proposition "+data.contreProp_id);
-        verifIsvalide(data.contreProp_id,data.proposition);
+        verifIsvalide(JSON.parse(message.utf8Data).contreProp_id,JSON.parse(message.utf8Data).proposition);
       }
     });
   });
@@ -232,13 +232,12 @@ async function updateContreProposition(proposition_id,reponse,cout,delai,quantit
   estValide: estValide,
   estAccepte: estAccepte,
   caracteristiques: caracteristiques});
-    if(estValide){
+    if(estValide && !estAccepte){
       const contre = await getContreProposition(proposition_id);
       var data = {};
       data.action = "newContreOffre";
       data.data = contre;
       connectionWS.sendUTF(JSON.stringify(data));
-      
     }
 }
 

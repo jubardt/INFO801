@@ -145,7 +145,8 @@
             
             <button v-if="!contrePropositions.estValide" class="button is-primary" @click="validContreProp">Valider la contre-proposition</button>
             <button v-else class="button is-primary is-outlined">Contre proposition déjà validé</button>
-            <p><strong>La proposition n'a pas encore été traité par le client</strong></p>
+            <p v-if="!contrePropositions.estAccepte"><strong>Votre proposition n'a pas encore été traité par le client</strong></p>
+            <p v-else><strong>Votre proposition a été accepté par le client !</strong></p>
         </div>
         <div v-else>
             Aucune contre proposition n'a encore été émise par le fabriquant ou sa dernière proposition à été refusé par le client

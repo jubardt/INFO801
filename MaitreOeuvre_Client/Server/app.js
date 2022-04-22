@@ -114,6 +114,9 @@ app.post("/acceptContreProposition", (req,res) => {
     console.log(req.body.id_contreProposition);
     console.log(req.body.id_proposition);
     var propAdd = await acceptContreProposition(req.body.id_contreProposition,req.body.id_proposition);
+    if(propAdd == true){
+      accepteContreOffreWs(req.body.id_contreProposition,req.body.id_proposition);
+    }
     res.status(200).send("Proposition accepté avec succès !");
   })();
 })
@@ -123,9 +126,9 @@ app.post("/updateProposition", (req,res) => {
   (async() => {
     var propAdd = await updateProposition(req.body.proposition_id,req.body.demande,req.body.description,req.body.cout,req.body.delai,req.body.caracteristiques,req.body.quantite,req.body.isValid);
     console.log(propAdd);
-    res.status(200).send("ajout réussi !");
-    const caca = await getPropositions();
-    console.log(caca); 
+    res.status(200).send("modification réussi !");
+    //const caca = await getPropositions();
+    //console.log(caca); 
   })();
 })
 
@@ -228,6 +231,7 @@ async function addContrePropositionWithId(id,proposition_id,reponse,cout,delai,q
 async function updateProposition(proposition_id,demande,description,cout,delai,caracteristiques,quantite, estValide) {
   await PropositionBDD.updateOne({_id:proposition_id},{sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:estValide,quantite:quantite});
   if(estValide == true){
+    console.log("j'envois la prop à tout le monde");
     validOffreWs();
   }
 }
@@ -284,7 +288,6 @@ async function acceptContreProposition(id_contreProposition,id_proposition) {
     console.log("je suis là");
     await ContrePropositionBDD.updateOne({_id:id_contreProposition},{estAccepte:true});
     console.log("j'ai modifié");
-    //accepteContreOffreWs(id_contreProposition,id_proposition);
     return true;
   }else{
     return false;
@@ -323,7 +326,7 @@ async function validOffre(ws){
 }
 
 async function refuseContreOffreWs(contreProp_id){
-    data = {}
+    var data = {}
     data.action = "deleteOffre";
     data.data = {contreProp_id:contreProp_id};
     console.log(data);
@@ -331,12 +334,12 @@ async function refuseContreOffreWs(contreProp_id){
 }
 
 async function accepteContreOffreWs(contreProp_id,proposition){
-  console.log("acccepte");
-  data = {}
-  data.action = "acceptOffre";
-  data.data = {contreProp_id:contreProp_id,proposition:proposition};
-  console.log(data);
-  broadcast(JSON.stringify(data));
+  var dataWS = {}
+  dataWS.action = "acceptOffre";
+  dataWS.contreProp_id = contreProp_id;
+  dataWS.proposition = proposition;
+  console.log(dataWS);
+  broadcast(JSON.stringify(dataWS));
 }
 
 
