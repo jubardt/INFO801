@@ -55,7 +55,7 @@
             <div class="field">
                 <label class="label">Réponse proposition: </label>
                 <div class="control">
-                    <textarea id="reponse" class="textarea" placeholder="Cette production de raquette doit permettre ..." v-bind:value="contrePropositions.reponse" readonly/>
+                    <textarea id="reponse" class="textarea" placeholder="Cette production de raquette doit permettre ..." v-bind:value="contrePropositions.reponse"/>
                 </div>
                 <p class="help">Réponse à la demande du client émise en plus de vos estimations sur les caractéristiques du projet</p>
             </div>
@@ -63,7 +63,7 @@
             <div class="field">
                 <label class="label">Cout: </label>
                 <div class="control">
-                    <input id="cout" class="input" type="number" placeholder="60 000 €" v-bind:value="contrePropositions.cout" readonly>
+                    <input id="cout" class="input" type="number" placeholder="60 000 €" v-bind:value="contrePropositions.cout">
                 </div>
                 <p class="help">Cout estimé du projet en <strong>€</strong></p>
             </div>
@@ -71,7 +71,7 @@
             <div class="field">
                 <label class="label">Délai: </label>
                 <div class="control">
-                    <input id="delai" class="input" type="text" placeholder="5 mois" v-bind:value="contrePropositions.delai" readonly>
+                    <input id="delai" class="input" type="text" placeholder="5 mois" v-bind:value="contrePropositions.delai">
                 </div>
                 <p class="help">Estimation du délai de production</p>
             </div>
@@ -79,7 +79,7 @@
             <div class="field">
                 <label class="label">Quantité: </label>
                 <div class="control">
-                    <input id="quantite" class="input" type="number" placeholder="60 000" v-bind:value="contrePropositions.quantite" readonly>
+                    <input id="quantite" class="input" type="number" placeholder="60 000" v-bind:value="contrePropositions.quantite">
                 </div>
                 <p class="help">Estimation du cout de production en €</p>
             </div>
@@ -88,13 +88,16 @@
                 <label class="label">Caractérisque: </label>
                 <div class="field" id="listCaract">
                     <div class="control">
-                    <input class="input" type="text" placeholder="Resistant" v-bind:value="contrePropositions.caracteristiques" readonly>
+                    <input id="carac" class="input" type="text" placeholder="Resistant" v-bind:value="contrePropositions.caracteristiques">
                     </div>
                 </div>
             </div>
             <div>Validé par le maitre d'oeuvre:<strong> {{contrePropositions.estValide?"OUI":"NON"}}</strong></div>
-            <button class="button is-warning" @click="modifContreProp">Modifier la contre proposition</button>
-            <strong>Votre proposition n'a pas encore été traité par le client</strong>
+            <div>
+                <button class="button is-warning" @click="modifContreProp">Modifier la contre proposition</button>
+                <p><strong>Votre proposition n'a pas encore été traité par le client</strong></p>
+            </div>
+
         </div>
         <div v-else-if="isMaitreOeuvre && contrePropositions!=null">
         <div class="field">
@@ -167,7 +170,6 @@ const request = require('request');
         },
         mounted(){
             this.idProp = this.$route.params.id;
-            console.log(this.idProp)
             this.isMaitreOeuvre = localStorage.getItem("userfab1") == "true";
             var options = {
                 url:"http://localhost:4000/proposition",
@@ -183,7 +185,6 @@ const request = require('request');
 
                 request(options, (err, res) => {
                     this.proposition = JSON.parse(res.body)[0];
-                    console.log(this.proposition);
                     var optionContre = {
                         url:"http://localhost:4000/contrePropositions",
                         method: 'POST',
@@ -197,7 +198,7 @@ const request = require('request');
                         };
                         request(optionContre,(errC,resC) =>{
                             this.contrePropositions = JSON.parse(resC.body)[0];
-                            console.log(resC.body);
+                            console.log(this.contrePropositions);
                             this.isLoaded = true;
                         });
                     });
@@ -241,7 +242,31 @@ const request = require('request');
                 });
             },
             modifContreProp(){
+                var list = [];
+                list = document.getElementById("carac").value.split(",");
+                console.log(list);
+                var options = {
+                    url:"http://localhost:4000/updateContreProposition",
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                            proposition_id:this.contrePropositions._id,
+                            reponse: document.getElementById("reponse").value,
+                            cout: document.getElementById("cout").value,
+                            delai: document.getElementById("delai").value,
+                            quantite: document.getElementById("quantite").value,
+                            caracteristiques: list
+                        })
+                    };
 
+                request(options, (err, res) => {
+                    console.log(res);
+                    alert("Votre proposition à bien été modifié !");
+                    location.reload();
+                });
             },
             validContreProp(){
 
