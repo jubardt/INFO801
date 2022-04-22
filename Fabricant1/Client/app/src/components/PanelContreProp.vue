@@ -103,7 +103,7 @@
         <div class="field">
                 <label class="label">Réponse proposition: </label>
                 <div class="control">
-                    <textarea id="reponse" class="textarea" placeholder="Cette production de raquette doit permettre ..." readonly/>
+                    <textarea id="reponse" class="textarea" placeholder="Cette production de raquette doit permettre ..." v-bind:value="contrePropositions.reponse" readonly/>
                 </div>
                 <p class="help">Réponse à la demande du client émise en plus de vos estimations sur les caractéristiques du projet</p>
             </div>
@@ -111,7 +111,7 @@
             <div class="field">
                 <label class="label">Cout: </label>
                 <div class="control">
-                    <input id="cout" class="input" type="number" placeholder="60 000 €" readonly>
+                    <input id="cout" class="input" type="number" placeholder="60 000 €" v-bind:value="contrePropositions.cout" readonly>
                 </div>
                 <p class="help">Cout estimé du projet en <strong>€</strong></p>
             </div>
@@ -119,7 +119,7 @@
             <div class="field">
                 <label class="label">Délai: </label>
                 <div class="control">
-                    <input id="delai" class="input" type="text" placeholder="5 mois" readonly>
+                    <input id="delai" class="input" type="text" placeholder="5 mois" v-bind:value="contrePropositions.delai" readonly>
                 </div>
                 <p class="help">Esitmation du délai de production</p>
             </div>
@@ -127,7 +127,7 @@
             <div class="field">
                 <label class="label">Quantité: </label>
                 <div class="control">
-                    <input id="quantite" class="input" type="number" placeholder="60 000" readonly>
+                    <input id="quantite" class="input" type="number" placeholder="60 000" v-bind:value="contrePropositions.quantite" readonly>
                 </div>
                 <p class="help">Estimation du cout de production en €</p>
             </div>
@@ -136,13 +136,15 @@
                 <label class="label">Caractérisque: </label>
                 <div class="field" id="listCaract">
                     <div class="control">
-                    <input class="input" type="text" placeholder="Resistant">
+                    <input class="input" type="text" placeholder="Resistant" v-bind:value="contrePropositions.caracteristiques">
                     </div>
                     
                 </div>
             </div>
-            <button class="button is-primary" @click="validContreProp">Valider la contre-proposition</button>
-            <strong>La proposition n'a pas encore été traité par le client</strong>
+            
+            <button v-if="!contrePropositions.estValide" class="button is-primary" @click="validContreProp">Valider la contre-proposition</button>
+            <button v-else class="button is-primary is-outlined">Contre proposition déjà validé</button>
+            <p><strong>La proposition n'a pas encore été traité par le client</strong></p>
         </div>
         <div v-else>
             Aucune contre proposition n'a encore été émise par le fabriquant ou sa dernière proposition à été refusé par le client
@@ -269,7 +271,23 @@ const request = require('request');
                 });
             },
             validContreProp(){
+                var options = {
+                url:"http://localhost:4000/updateContreProposition",
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    proposition_id:this.contrePropositions._id,
+                    estValide:true
+                    })
+                };
 
+                request(options, (err, res) => {
+                    console.log(res.body);
+                    //console.log(this.listeRequete);
+                });
             }
         }
     }
