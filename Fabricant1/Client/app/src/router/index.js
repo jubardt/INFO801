@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import listes from '@/components/listes.vue'
-import Home from '@/components/Home.vue'
-import newOffre from '@/components/newOffre.vue'
 import ListPropositions from '@/components/ListPropositions.vue'
+import PanelContreProp from '@/components/PanelContreProp.vue'
 
 
 const routes = [
@@ -12,21 +11,16 @@ const routes = [
         component: listes,
     },
     {
-        name: 'home',
-        path: '/home',
-        component: Home,
-    },
-    {
-        name: 'offre',
-        path: '/offre',
-        component: newOffre,
-    },
-    {
         name: 'offreListe',
         path: '/',
         component: ListPropositions,
-    }
+    },
+    {
+        name: 'contreProp',
+        path: '/contreProp/:id',
+        component: PanelContreProp,
 
+    }
     //Ajouter la route
 ];
 
