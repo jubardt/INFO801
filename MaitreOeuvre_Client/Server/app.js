@@ -49,7 +49,7 @@ async function main() {
 
   //INITIALISATION DES LISTES DE PROPOSITIONS ET DE CONTRE-PROPOSITIONS
   await mongoose.connect("mongodb://localhost:27017/app");
-  validOffreWs();
+
   /*const test = new PropositionBDD({sujet:"test",description:"Une batterie de test pour voir si ça marche",cout:0,delai:"5 jours",quantite:0,estValide:false,caracteristiques:["Robuste","Métallique","flexible"]});
   await test.save();
   const testContre = new ContrePropositionBDD({proposition:test._id,reponse:"Une batterie de test pour voir si ça marche",cout:0,delai:"5 jours",quantite:0,estValide:false,estAccepte:false,caracteristiques:["Robuste","Métallique","flexible"]});
@@ -182,9 +182,12 @@ app.listen(portAPI, () => console.log(`Example app listening on port ${portAPI}!
 
 ///GESTION DU WEBSOCKET ENTRE LES ESPACES DE TUPLES
 wss.on("connection", ws => {
+  validOffreWs(); //On envoie les offres déjà valides
   ws.on("message", (data,isBinary) =>{
     console.log("message reçu: "+data);
-    ws.send("Oui je t'entends !!!!!");
+    if(data.action == "newContreOffre"){
+      addContrePropositionWithId(data.data._id,data.data.proposition,data.data.reponse,data.data.cout,data.data.delai,data.data.quantite,data.data.caracteristiques);
+    }
   });
 });
 console.log("The WebSocket server is running on port "+portSocket);
@@ -200,6 +203,7 @@ async function addProposition(demande,description,cout,delai,caracteristiques,qu
   return propositionBDD;
 }
 
+
 //Renvoi la liste des contre propositions d'une proposition
 async function addContreProposition( proposition_id,reponse,cout,delai,quantite,caracteristiques) {
   const contre = new ContrePropositionBDD({_id: new mongoose.Types.ObjectId().toHexString(),proposition:proposition_id,reponse:reponse,cout:cout,delai:delai,quantite:quantite,estValide:false,estAccepte:false,caracteristiques:caracteristiques});
@@ -207,10 +211,21 @@ async function addContreProposition( proposition_id,reponse,cout,delai,quantite,
   return contre;
 }
 
+async function addContrePropositionWithId(id,proposition_id,reponse,cout,delai,quantite,caracteristiques) {
+  const contre = new ContrePropositionBDD({_id: id,proposition:proposition_id,reponse:reponse,cout:cout,delai:delai,quantite:quantite,estValide:true,estAccepte:false,caracteristiques:caracteristiques});
+  await contre.save();
+  return contre;
+}
+
+
+
 
 ///////UPDATE////////////////////
 async function updateProposition(proposition_id,demande,description,cout,delai,caracteristiques,quantite, estValide) {
   PropositionBDD.updateOne({_id:proposition_id},{sujet:demande,description:description,cout:cout,delai:delai,caracteristiques:caracteristiques,estValide:estValide,quantite:quantite});
+  if(estValide == true){
+    validOffreWs();
+  }
 }
 
 async function updateContreProposition(proposition_id,reponse,cout,delai,quantite,caracteristiques,estValide,estAccepte) {
@@ -222,6 +237,7 @@ async function updateContreProposition(proposition_id,reponse,cout,delai,quantit
   estValide: estValide,
   estAccepte: estAccepte,
   caracteristiques: caracteristiques});
+  accepteContreOffreWs(proposition_id);
 }
 
 
@@ -230,6 +246,7 @@ async function deleteContreProposition(proposition_id) {
   ContrePropositionBDD.deleteOne({_id:proposition_id},function(err,res){
     console.log(res);
   });
+  refuseContreOffreWs(contreProp_id);
 }
 
 /////GET//////////
@@ -289,18 +306,18 @@ async function validOffreWs(){
   }
 }
 
-async function refuseContreOffreWs(contreProp_id,reponse){
+async function refuseContreOffreWs(contreProp_id){
     data = {}
     data.action = "deleteOffre";
-    data.data = {contreProp_id:contreProp_id,reponse:reponse};
+    data.data = {contreProp_id:contreProp_id};
     console.log(data);
     broadcast(data);
 }
 
-async function accepteContreOffreWs(contreProp_id,reponse){
+async function accepteContreOffreWs(contreProp_id){
   data = {}
   data.action = "acceptOffre";
-  data.data = {contreProp_id:contreProp_id,reponse:reponse};
+  data.data = {contreProp_id:contreProp_id};
   console.log(data);
   broadcast(data);
 }
