@@ -48,7 +48,7 @@ main().catch(error => console.error(error));
 async function main() {
 
   //INITIALISATION DES LISTES DE PROPOSITIONS ET DE CONTRE-PROPOSITIONS
-  await mongoose.connect("mongodb://localhost:27017/fabriquant");
+  await mongoose.connect("mongodb://localhost:27017/app");
   /*const test = new PropositionBDD({sujet:"test",description:"Une batterie de test pour voir si ça marche",cout:0,delai:"5 jours",quantite:0,estValide:false,caracteristiques:["Robuste","Métallique","flexible"]});
   await test.save();
   const testContre = new ContrePropositionBDD({proposition:test._id,reponse:"Une batterie de test pour voir si ça marche",cout:0,delai:"5 jours",quantite:0,estValide:false,estAccepte:false,caracteristiques:["Robuste","Métallique","flexible"]});
