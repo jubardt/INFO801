@@ -47,7 +47,7 @@ export default {
     connect(){
         var user = document.getElementById("user").value;
         var mdp = document.getElementById("mdp").value;
-        if(user == "admin" && mdp == "1234"){
+        if(user == "maitreoeuvre" && mdp == "1234"){
             localStorage.setItem("user","true");
             localStorage.setItem("isClient","false");
             this.close();
@@ -64,6 +64,7 @@ export default {
     },
     disconnect(){
         localStorage.setItem("user","false");
+        localStorage.setItem("isClient","false");
         this.isConnected = false;
     }
 }

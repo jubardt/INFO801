@@ -127,8 +127,6 @@ app.post("/updateProposition", (req,res) => {
     var propAdd = await updateProposition(req.body.proposition_id,req.body.demande,req.body.description,req.body.cout,req.body.delai,req.body.caracteristiques,req.body.quantite,req.body.isValid);
     console.log(propAdd);
     res.status(200).send("modification réussi !");
-    //const caca = await getPropositions();
-    //console.log(caca); 
   })();
 })
 
@@ -136,8 +134,6 @@ app.post("/updateContreProposition", (req,res) => {
   (async() => {
     var propAdd = await updateContreProposition(req.body.proposition_id,req.body.proposition,req.body.reponse,req.body.cout,req.body.delai,req.body.quantite,req.body.caracteristiques,req.body.estValide,req.body.estAccepte);
     res.status(200).send("ajout réussi !");
-    const caca = await getContrePropositions();
-    console.log(caca); 
   })();
 })
 
